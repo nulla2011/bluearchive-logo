@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -25,7 +29,6 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
   min-width: 320px;
 }
 
@@ -76,4 +79,9 @@ button:focus-visible {
 #canvas {
   border-radius: 8px;
   border: 1px solid #ccc;
+}
+
+.title {
+  margin-top: 2em;
+  text-align: center;
 }

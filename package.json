@@ -9,7 +9,15 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.9",
+    "autoprefixer": "^10.4.16",
+    "daisyui": "^3.9.1",
+    "postcss": "^8.4.31",
+    "tailwindcss": "^3.3.3",
     "typescript": "^5.0.2",
     "vite": "^4.4.5"
+  },
+  "dependencies": {
+    "lodash-es": "^4.17.21"
   }
 }

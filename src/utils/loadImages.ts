@@ -10,5 +10,8 @@ const loadImg = (src: string): Promise<HTMLImageElement> => {
   });
 };
 export default async () => {
-  return await Promise.all([loadImg(halo), loadImg(cross)]);
+  await Promise.all([
+    loadImg(halo).then((img) => (window.halo = img)),
+    loadImg(cross).then((img) => (window.cross = img)),
+  ]);
 };

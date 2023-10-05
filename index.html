@@ -7,7 +7,20 @@
     <title>blue archive</title>
   </head>
   <body>
-    <canvas id="canvas" height="250"  width="900" ></canvas>
+    <h1 class="title">blue archive</h1>
+    <div class="flex justify-center">
+      <canvas id="canvas" height="250"  width="900" ></canvas>
+    </div>
+    <div class="w-[32rem] mx-auto my-8 flex flex-col">
+      <div class="flex justify-center my-4">
+        <span><input id="text1" type="text" placeholder="Type here" value="Blue" class="input input-bordered input-md input-primary mr-1" /></span>
+        <span><input id="text2" type="text" placeholder="Type here" value="Archive" class="input input-bordered input-md input-secondary ml-1" /></span>
+      </div>
+      <div class="flex justify-evenly my-4">
+        <span><button class="btn btn-primary">Save</button></span>
+        <span><button class="btn btn-primary">Copy</button></span>
+      </div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>
