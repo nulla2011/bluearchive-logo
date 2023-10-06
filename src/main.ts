@@ -1,12 +1,12 @@
 import './style.css';
-import Canvas from './canvas';
+import LogoCanvas from './canvas';
 import loadFont from './utils/loadFont';
 import loadImages from './utils/loadImages';
 
 (async function () {
   await loadFont();
   await loadImages();
-  const logo = new Canvas();
+  const logo = new LogoCanvas();
   logo.bindEvent();
   logo.draw();
 })();

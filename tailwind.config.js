@@ -9,9 +9,9 @@ export default {
     themes: [
       {
         mytheme: {
-          primary: '#65ceff',
+          primary: '#53bcfe',
           secondary: '#2b2b2b',
-          '--rounded-btn': '0.25rem',
+          '--rounded-btn': '0.3rem',
         },
       },
     ],
