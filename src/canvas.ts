@@ -1,7 +1,9 @@
 import debounce from 'lodash-es/debounce';
 import settings from './settings';
+import loadFont from './utils/loadFont';
 const { canvasHeight, canvasWidth, fontSize, horizontalTilt, textPosition, graphOffset, paddingX } =
   settings;
+const font = `${fontSize}px RoGSanSrfStd-Bd, GlowSansSC-Normal-Heavy, apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif`;
 export default class LogoCanvas {
   public canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
@@ -17,10 +19,11 @@ export default class LogoCanvas {
     this.canvas.height = canvasHeight;
     this.canvas.width = canvasWidth;
   }
-  draw() {
+  async draw() {
     const c = this.ctx;
     //predict canvas width
-    c.font = `${fontSize}px G2B, GSH`;
+    await loadFont(this.textL + this.textR);
+    c.font = font;
     this.textMetricsL = c.measureText(this.textL);
     this.textMetricsR = c.measureText(this.textR);
     this.setWidth();
@@ -46,7 +49,7 @@ export default class LogoCanvas {
       c.stroke();
     }
     //blue text -> halo -> black text -> cross
-    c.font = `${fontSize}px G2B, GSH`;
+    c.font = font;
     c.fillStyle = '#128AFA';
     c.textAlign = 'end';
     c.setTransform(1, 0, horizontalTilt, 1, 0, 0);
