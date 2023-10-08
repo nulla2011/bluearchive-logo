@@ -3,7 +3,7 @@ import settings from './settings';
 import loadFont from './utils/loadFont';
 const { canvasHeight, canvasWidth, fontSize, horizontalTilt, textPosition, graphOffset, paddingX } =
   settings;
-const font = `${fontSize}px RoGSanSrfStd-Bd, GlowSansSC-Normal-Heavy, apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif`;
+const font = `${fontSize}px RoGSanSrfStd-Bd, GlowSansSC-Normal-Heavy_diff, apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif`;
 export default class LogoCanvas {
   public canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;

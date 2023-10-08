@@ -7,7 +7,7 @@ export default async (content: string = 'A') => {
   //   fonts.map((font) => document.fonts.add(font))
   // );
   await document.fonts.load(
-    `${settings.fontSize}px RoGSanSrfStd-Bd, GlowSansSC-Normal-Heavy`,
+    `${settings.fontSize}px RoGSanSrfStd-Bd, GlowSansSC-Normal-Heavy_diff`,
     content
   );
 };
