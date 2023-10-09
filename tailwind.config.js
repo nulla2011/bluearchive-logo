@@ -11,6 +11,7 @@ export default {
         mytheme: {
           primary: '#53bcfe',
           secondary: '#2b2b2b',
+          'base-100': '#ffffff',
           '--rounded-btn': '0.3rem',
         },
       },

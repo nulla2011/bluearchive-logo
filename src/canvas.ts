@@ -1,9 +1,10 @@
 import debounce from 'lodash-es/debounce';
 import settings from './settings';
 import loadFont from './utils/loadFont';
-const { canvasHeight, canvasWidth, fontSize, horizontalTilt, textPosition, graphOffset, paddingX } =
+const { canvasHeight, canvasWidth, fontSize, horizontalTilt, textBaseLine, graphOffset, paddingX } =
   settings;
 const font = `${fontSize}px RoGSanSrfStd-Bd, GlowSansSC-Normal-Heavy_diff, apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif`;
+
 export default class LogoCanvas {
   public canvas: HTMLCanvasElement;
   private ctx: CanvasRenderingContext2D;
@@ -11,8 +12,10 @@ export default class LogoCanvas {
   public textR = 'Archive';
   private textMetricsL: TextMetrics | null = null;
   private textMetricsR: TextMetrics | null = null;
-  public textWidthL = 0;
-  public textWidthR = 0;
+  private canvasWidthL = canvasWidth / 2;
+  private canvasWidthR = canvasWidth / 2;
+  private textWidthL = 0;
+  private textWidthR = 0;
   constructor() {
     this.canvas = document.querySelector('#canvas')!;
     this.ctx = this.canvas.getContext('2d')!;
@@ -53,11 +56,11 @@ export default class LogoCanvas {
     c.fillStyle = '#128AFA';
     c.textAlign = 'end';
     c.setTransform(1, 0, horizontalTilt, 1, 0, 0);
-    c.fillText(this.textL, this.canvas.width * textPosition.X, this.canvas.height * textPosition.Y);
+    c.fillText(this.textL, this.canvasWidthL, this.canvas.height * textBaseLine);
     c.resetTransform(); //restore don't work
     c.drawImage(
       window.halo,
-      this.canvas.width / 2 - canvasHeight / 2 + graphOffset,
+      this.canvasWidthL - canvasHeight / 2 + graphOffset,
       0,
       canvasHeight,
       canvasHeight
@@ -67,16 +70,12 @@ export default class LogoCanvas {
     c.strokeStyle = 'white';
     c.lineWidth = 12;
     c.setTransform(1, 0, horizontalTilt, 1, 0, 0);
-    c.strokeText(
-      this.textR,
-      this.canvas.width * textPosition.X,
-      this.canvas.height * textPosition.Y
-    );
-    c.fillText(this.textR, this.canvas.width * textPosition.X, this.canvas.height * textPosition.Y);
+    c.strokeText(this.textR, this.canvasWidthL, this.canvas.height * textBaseLine);
+    c.fillText(this.textR, this.canvasWidthL, this.canvas.height * textBaseLine);
     c.resetTransform();
     c.drawImage(
       window.cross,
-      this.canvas.width / 2 - canvasHeight / 2 + graphOffset,
+      this.canvasWidthL - canvasHeight / 2 + graphOffset,
       0,
       canvasHeight,
       canvasHeight
@@ -110,37 +109,63 @@ export default class LogoCanvas {
     });
   }
   setWidth() {
-    this.textWidthR =
-      this.textMetricsR!.width +
-      (textPosition.Y * canvasHeight - this.textMetricsR!.fontBoundingBoxAscent) * horizontalTilt;
     this.textWidthL =
       this.textMetricsL!.width -
-      (textPosition.Y * canvasHeight + this.textMetricsL!.fontBoundingBoxDescent) * horizontalTilt;
-    const maxWidth = Math.ceil(Math.max(this.textWidthL, this.textWidthR)) + paddingX;
-    if (maxWidth * 2 > canvasWidth) {
-      this.canvas.width = maxWidth * 2;
+      (textBaseLine * canvasHeight + this.textMetricsL!.fontBoundingBoxDescent) * horizontalTilt;
+    this.textWidthR =
+      this.textMetricsR!.width +
+      (textBaseLine * canvasHeight - this.textMetricsR!.fontBoundingBoxAscent) * horizontalTilt;
+    //extend canvas
+    if (this.textWidthL + paddingX > canvasWidth / 2) {
+      this.canvasWidthL = this.textWidthL + paddingX;
+      console.log(
+        '🚀 ~ file: canvas.ts:121 ~ LogoCanvas ~ setWidth ~ this.canvasWidthL:',
+        this.canvasWidthL
+      );
     } else {
-      this.canvas.width = canvasWidth;
+      this.canvasWidthL = canvasWidth / 2;
     }
+    if (this.textWidthR + paddingX > canvasWidth / 2) {
+      this.canvasWidthR = this.textWidthR + paddingX;
+    } else {
+      this.canvasWidthR = canvasWidth / 2;
+    }
+    this.canvas.width = this.canvasWidthL + this.canvasWidthR;
+    console.log(
+      '🚀 ~ file: canvas.ts:134 ~ LogoCanvas ~ setWidth ~ this.canvas.width:',
+      this.canvas.width
+    );
   }
   generateImg() {
-    const imgCanvas = new OffscreenCanvas(
-      this.textWidthL + this.textWidthR + paddingX * 2,
-      this.canvas.height
-    );
-    const ctx = imgCanvas.getContext('2d')!;
-    ctx.drawImage(
-      this.canvas,
-      this.canvas.width / 2 - this.textWidthL - paddingX,
-      0,
-      this.textWidthL + this.textWidthR + paddingX * 2,
-      this.canvas.height,
-      0,
-      0,
-      this.textWidthL + this.textWidthR + paddingX * 2,
-      this.canvas.height
-    );
-    return imgCanvas.convertToBlob();
+    if (this.canvasWidthL < canvasWidth / 2 || this.canvasWidthR < canvasWidth / 2) {
+      const imgCanvas = new OffscreenCanvas(
+        this.canvasWidthL + this.canvasWidthR,
+        this.canvas.height
+      );
+      const ctx = imgCanvas.getContext('2d')!;
+      ctx.drawImage(
+        this.canvas,
+        canvasWidth / 2 - this.canvasWidthL,
+        0,
+        this.canvasWidthL + this.canvasWidthR,
+        this.canvas.height,
+        0,
+        0,
+        this.canvasWidthL + this.canvasWidthR,
+        this.canvas.height
+      );
+      return imgCanvas.convertToBlob();
+    } else {
+      return new Promise<Blob>((resolve, reject) => {
+        this.canvas.toBlob((blob) => {
+          if (blob) {
+            resolve(blob);
+          } else {
+            reject();
+          }
+        });
+      });
+    }
   }
   saveImg() {
     this.generateImg().then((blob) => {

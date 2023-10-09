@@ -6,8 +6,11 @@ export default async (content: string = 'A') => {
   // await Promise.all([G2B.load() /*, GSH.load()*/]).then((fonts) =>
   //   fonts.map((font) => document.fonts.add(font))
   // );
+  const loadingSwitch = document.querySelector('#loading-switch') as HTMLInputElement;
+  loadingSwitch.checked = true;
   await document.fonts.load(
     `${settings.fontSize}px RoGSanSrfStd-Bd, GlowSansSC-Normal-Heavy_diff`,
     content
   );
+  loadingSwitch.checked = false;
 };

@@ -1,32 +1,44 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="/RoGSans/font.css"/>
-    <link rel="stylesheet" type="text/css" href="/GlowSans/font.css"/>
-    <title>blue archive</title>
-  </head>
-  <body>
-    <h1 class="title">blue archive</h1>
-    <div class="flex justify-center">
-      <canvas id="canvas" height="250" width="900" ></canvas>
-    </div>
-    <div class="w-[32rem] mx-auto my-8 flex flex-col">
-      <div class="flex justify-center my-4">
-        <span><input id="textL" type="text" placeholder="Type here" value="Blue" class="input input-bordered input-md input-primary mr-1" /></span>
-        <span><input id="textR" type="text" placeholder="Type here" value="Archive" class="input input-bordered input-md input-secondary ml-1" /></span>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" type="text/css" href="/RoGSans/font.css" />
+  <link rel="stylesheet" type="text/css" href="/GlowSans/font.css" />
+  <title>blue archive</title>
+</head>
+
+<body>
+  <h1 class="title">blue archive</h1>
+  <div class="flex justify-center">
+    <canvas id="canvas" height="200" width="800"></canvas>
+  </div>
+  <div class="w-[32rem] mx-auto my-8 flex flex-col">
+    <label class="swap">
+      <input type="checkbox" disabled id="loading-switch" />
+      <div class="alert alert-info swap-on w-96 mx-auto">
+        <span class="loading loading-spinner loading-md"></span>
+        <span>loading assets...</span>
       </div>
-      <!-- <div class="flex justify-evenly my-4">
+    </label>
+    <div class="flex justify-center my-4">
+      <span><input id="textL" type="text" placeholder="Type here" value="Blue"
+          class="input input-bordered input-md input-primary mr-1" /></span>
+      <span><input id="textR" type="text" placeholder="Type here" value="Archive"
+          class="input input-bordered input-md input-secondary ml-1" /></span>
+    </div>
+    <!-- <div class="flex justify-evenly my-4">
         <span><input type="number" placeholder="Type here" value="Blue" class="input input-bordered input-sm input-primary mr-1" /></span>
         <span><input type="number" placeholder="Type here" value="Archive" class="input input-bordered input-sm input-primary ml-1" /></span>
       </div> -->
-      <div class="flex justify-evenly my-4">
-        <span><button class="btn btn-primary" id="save">Save</button></span>
-        <span><button class="btn btn-primary" id="copy">Copy</button></span>
-      </div>
+    <div class="flex justify-evenly my-4">
+      <span><button class="btn btn-primary" id="save">Save</button></span>
+      <span><button class="btn btn-primary" id="copy">Copy</button></span>
     </div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+  </div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>
