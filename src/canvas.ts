@@ -131,10 +131,6 @@ export default class LogoCanvas {
       this.canvasWidthR = canvasWidth / 2;
     }
     this.canvas.width = this.canvasWidthL + this.canvasWidthR;
-    console.log(
-      '🚀 ~ file: canvas.ts:134 ~ LogoCanvas ~ setWidth ~ this.canvas.width:',
-      this.canvas.width
-    );
   }
   generateImg() {
     if (this.canvasWidthL < canvasWidth / 2 || this.canvasWidthR < canvasWidth / 2) {

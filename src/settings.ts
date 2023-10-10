@@ -1,5 +1,5 @@
 export default {
-  canvasHeight: 200,
+  canvasHeight: 250,
   canvasWidth: 900,
   fontSize: 85,
   textBaseLine: 0.68,

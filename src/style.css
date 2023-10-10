@@ -32,7 +32,7 @@ body {
 }
 
 h1 {
-  font-size: 3.2em;
+  font-size: 2em;
   line-height: 1.1;
 }
 
@@ -46,9 +46,5 @@ h1 {
 #canvas {
   border-radius: 8px;
   border: 1px solid #ccc;
-}
-
-.title {
-  margin-top: 2em;
-  text-align: center;
+  max-width: 100%;
 }

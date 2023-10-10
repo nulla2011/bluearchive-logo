@@ -18,6 +18,7 @@
     "vite": "^4.4.5"
   },
   "dependencies": {
+    "i18next": "^23.5.1",
     "lodash-es": "^4.17.21"
   }
 }
