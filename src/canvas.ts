@@ -16,6 +16,8 @@ export default class LogoCanvas {
   private canvasWidthR = canvasWidth / 2;
   private textWidthL = 0;
   private textWidthR = 0;
+  private graphOffset = graphOffset;
+  private transparentBg = false;
   constructor() {
     this.canvas = document.querySelector('#canvas')!;
     this.ctx = this.canvas.getContext('2d')!;
@@ -23,9 +25,12 @@ export default class LogoCanvas {
     this.canvas.width = canvasWidth;
   }
   async draw() {
+    const loading = document.querySelector('#loading')!;
+    loading.classList.remove('hidden');
     const c = this.ctx;
     //predict canvas width
     await loadFont(this.textL + this.textR);
+    loading.classList.add('hidden');
     c.font = font;
     this.textMetricsL = c.measureText(this.textL);
     this.textMetricsR = c.measureText(this.textR);
@@ -33,8 +38,10 @@ export default class LogoCanvas {
     //clear canvas
     c.clearRect(0, 0, this.canvas.width, this.canvas.height);
     //Background
-    c.fillStyle = '#fff';
-    c.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    if (!this.transparentBg) {
+      c.fillStyle = '#fff';
+      c.fillRect(0, 0, this.canvas.width, this.canvas.height);
+    }
     //guide line
     if (import.meta.env.DEV) {
       c.strokeStyle = '#00cccc';
@@ -60,14 +67,18 @@ export default class LogoCanvas {
     c.resetTransform(); //restore don't work
     c.drawImage(
       window.halo,
-      this.canvasWidthL - canvasHeight / 2 + graphOffset,
-      0,
+      this.canvasWidthL - canvasHeight / 2 + this.graphOffset.X,
+      this.graphOffset.Y,
       canvasHeight,
       canvasHeight
     );
     c.fillStyle = '#2B2B2B';
     c.textAlign = 'start';
-    c.strokeStyle = 'white';
+    if (this.transparentBg) {
+      c.strokeStyle = '#0000';
+    } else {
+      c.strokeStyle = 'white';
+    }
     c.lineWidth = 12;
     c.setTransform(1, 0, horizontalTilt, 1, 0, 0);
     c.strokeText(this.textR, this.canvasWidthL, this.canvas.height * textBaseLine);
@@ -75,37 +86,51 @@ export default class LogoCanvas {
     c.resetTransform();
     c.drawImage(
       window.cross,
-      this.canvasWidthL - canvasHeight / 2 + graphOffset,
-      0,
+      this.canvasWidthL - canvasHeight / 2 + graphOffset.X,
+      this.graphOffset.Y,
       canvasHeight,
       canvasHeight
     );
   }
   bindEvent() {
-    for (const id of ['textL', 'textR']) {
+    const process = (id: 'textL' | 'textR', el: HTMLInputElement) => {
+      this[id] = el.value;
+      this.draw();
+    };
+    for (const t of ['textL', 'textR']) {
+      const id = t as 'textL' | 'textR';
       const el = document.getElementById(id)! as HTMLInputElement;
+      el.addEventListener('compositionstart', () => el.setAttribute('composing', ''));
+      el.addEventListener('compositionend', () => {
+        process(id, el);
+        el.removeAttribute('composing');
+      });
       el.addEventListener(
         'input',
         debounce(() => {
-          switch (id) {
-            case 'textL':
-              this.textL = el.value;
-              break;
-            case 'textR':
-              this.textR = el.value;
-              break;
-            default:
-              break;
+          if (el.hasAttribute('composing')) {
+            return;
           }
-          this.draw();
-        }, 500)
+          process(id, el);
+        }, 300)
       );
     }
-    document.querySelector('#save')!.addEventListener('click', () => {
-      this.saveImg();
+    document.querySelector('#save')!.addEventListener('click', () => this.saveImg());
+    document.querySelector('#copy')!.addEventListener('click', () => this.copyImg());
+    const tSwitch = document.querySelector('#transparent')! as HTMLInputElement;
+    tSwitch.addEventListener('change', () => {
+      this.transparentBg = tSwitch.checked;
+      this.draw();
     });
-    document.querySelector('#copy')!.addEventListener('click', () => {
-      this.copyImg();
+    const gx = document.querySelector('#graphX')! as HTMLInputElement;
+    const gy = document.querySelector('#graphY')! as HTMLInputElement;
+    gx.addEventListener('input', () => {
+      this.graphOffset.X = parseInt(gx.value);
+      this.draw();
+    });
+    gy.addEventListener('input', () => {
+      this.graphOffset.Y = parseInt(gy.value);
+      this.draw();
     });
   }
   setWidth() {
@@ -118,10 +143,6 @@ export default class LogoCanvas {
     //extend canvas
     if (this.textWidthL + paddingX > canvasWidth / 2) {
       this.canvasWidthL = this.textWidthL + paddingX;
-      console.log(
-        '🚀 ~ file: canvas.ts:121 ~ LogoCanvas ~ setWidth ~ this.canvasWidthL:',
-        this.canvasWidthL
-      );
     } else {
       this.canvasWidthL = canvasWidth / 2;
     }
@@ -133,21 +154,24 @@ export default class LogoCanvas {
     this.canvas.width = this.canvasWidthL + this.canvasWidthR;
   }
   generateImg() {
-    if (this.canvasWidthL < canvasWidth / 2 || this.canvasWidthR < canvasWidth / 2) {
+    if (
+      this.textWidthL + paddingX < canvasWidth / 2 ||
+      this.textWidthR + paddingX < canvasWidth / 2
+    ) {
       const imgCanvas = new OffscreenCanvas(
-        this.canvasWidthL + this.canvasWidthR,
+        this.textWidthL + this.textWidthR + paddingX * 2,
         this.canvas.height
       );
       const ctx = imgCanvas.getContext('2d')!;
       ctx.drawImage(
         this.canvas,
-        canvasWidth / 2 - this.canvasWidthL,
+        canvasWidth / 2 - this.textWidthL - paddingX,
         0,
-        this.canvasWidthL + this.canvasWidthR,
+        this.textWidthL + this.textWidthR + paddingX * 2,
         this.canvas.height,
         0,
         0,
-        this.canvasWidthL + this.canvasWidthR,
+        this.textWidthL + this.textWidthR + paddingX * 2,
         this.canvas.height
       );
       return imgCanvas.convertToBlob();
@@ -173,13 +197,17 @@ export default class LogoCanvas {
       URL.revokeObjectURL(url);
     });
   }
-  copyImg() {
-    this.generateImg().then((blob) => {
-      const cp = [new ClipboardItem({ 'image/png': blob })];
-      navigator.clipboard
-        .write(cp)
-        .then(() => console.log('image copied'))
-        .catch((e) => console.error("can't copy", e));
-    });
+  async copyImg() {
+    const blob = await this.generateImg();
+    const cp = [new ClipboardItem({ 'image/png': blob })];
+    navigator.clipboard
+      .write(cp)
+      .then(() => {
+        console.log('image copied');
+        const msg = document.querySelector('#message-switch') as HTMLInputElement;
+        msg.checked = true;
+        setTimeout(() => (msg.checked = false), 2000);
+      })
+      .catch((e) => console.error("can't copy", e));
   }
 }

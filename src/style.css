@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  font-family: apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif;
   line-height: 1.5;
   font-weight: 400;
 
-  color: #213547;
-  background-color: rgb(250, 250, 250);
+  color: #224463;
+  background-color: rgb(249, 249, 249);
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -36,15 +36,21 @@ h1 {
   line-height: 1.1;
 }
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
 #canvas {
   border-radius: 8px;
   border: 1px solid #ccc;
   max-width: 100%;
+}
+
+@media (max-width: 900px){
+  .canvas-wrapper{
+    aspect-ratio: 900/250;
+  }
+}
+
+@media (min-width: 900px){
+  .canvas-wrapper{
+    height: 250px;
+    width: 100%;
+  }
 }

@@ -5,5 +5,5 @@ export default {
   textBaseLine: 0.68,
   horizontalTilt: -0.4,
   paddingX: 10,
-  graphOffset: -18,
+  graphOffset: { X: -18, Y: 0 },
 };

@@ -1,5 +1,14 @@
 {
   "title": "BlueArchive-Style Logo Generater",
   "save": "SAVE",
-  "copy": "COPY"
+  "copy": "COPY",
+  "copy-success": "Image copied",
+  "transparent-background": "Transparent Background",
+  "advance": "Advance settings",
+  "halo-cross": "Halo & Cross adjust",
+  "font-title": "Used Fonts",
+  "main-font": "Main font: ",
+  "fallback-font": "Fallback font: ",
+  "glow": "Wêlai Glow Sans",
+  "github-repo": "GitHub repo"
 }

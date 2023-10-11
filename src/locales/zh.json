@@ -1,5 +1,14 @@
 {
   "title": "碧蓝档案风 logo 生成器",
   "save": "保存",
-  "copy": "复制"
+  "copy": "复制",
+  "copy-success": "图片已成功复制",
+  "transparent-background": "透明背景",
+  "advance": "高级设置",
+  "halo-cross": "光环位置微调",
+  "font-title": "使用的字体",
+  "main-font": "主要字体：",
+  "fallback-font": "Fallback 字体：",
+  "glow": "未来荧黑",
+  "github-repo": "GitHub 仓库"
 }

@@ -11,33 +11,81 @@
 </head>
 
 <body>
-  <h1 class="i18n mt-16 mb-12 text-center" data-i18n="title">BlueArchive-Style Logo Generater</h1>
-  <div class="flex justify-center items-center h-[250px]">
-    <canvas id="canvas" height="250" width="900"></canvas>
-  </div>
-  <div class="w-screen mx-auto my-8 flex flex-col sm:w-[32rem]">
-    <!-- <label class="swap">
-      <input type="checkbox" disabled id="loading-switch" />
-      <div class="alert alert-info swap-on w-96 mx-auto">
-        <span class="loading loading-spinner loading-md"></span>
-        <span>loading assets...</span>
+  <header>
+    <h1 class="i18n mt-20 mb-16 text-center" data-i18n="title">BlueArchive-Style Logo Generater</h1>
+  </header>
+  <section class="canvas-wrapper flex place-content-center">
+    <div class="relative">
+      <canvas id="canvas" height="250" width="900"></canvas>
+      <div id='loading' class="absolute w-full h-full top-0 left-0 backdrop-blur-sm bg-slate-400/5 z-50 hidden">
+        <div class="flex place-content-center h-full">
+          <span class="loading loading-spinner loading-lg mx-auto"></span>
+        </div>
       </div>
-    </label> -->
-    <div class="flex justify-center my-4">
-      <span><input id="textL" type="text" placeholder="Type here" value="Blue"
-          class="input input-bordered input-md input-primary mr-1" /></span>
-      <span><input id="textR" type="text" placeholder="Type here" value="Archive"
-          class="input input-bordered input-md input-secondary ml-1" /></span>
     </div>
-    <!-- <div class="flex justify-evenly my-4">
-        <span><input type="number" placeholder="Type here" value="Blue" class="input input-bordered input-sm input-primary mr-1" /></span>
-        <span><input type="number" placeholder="Type here" value="Archive" class="input input-bordered input-sm input-primary ml-1" /></span>
-      </div> -->
+  </section>
+  <section class="w-full mx-auto my-6 flex flex-col sm:w-[32rem]">
+    <div class="flex justify-center my-4 px-2">
+      <input id="textL" type="text" placeholder="Type here" value="Blue"
+        class="input input-bordered input-md input-primary mr-1 w-40 max-w-[14rem] flex-1" />
+      <input id="textR" type="text" placeholder="Type here" value="Archive"
+        class="input input-bordered input-md input-secondary ml-1 w-40 max-w-[14rem] flex-1" />
+    </div>
+    <div class="my-2">
+      <label class="cursor-pointer label justify-start mx-10">
+        <input type="checkbox" class="toggle toggle-primary" id="transparent" />
+        <span class="i18n label-text text-base ml-4 mr-16" data-i18n="transparent-background">Transparent
+          Background</span>
+      </label>
+    </div>
+    <div class="mx-6 my-2">
+      <div class="collapse collapse-arrow bg-base-100">
+        <input type="checkbox" />
+        <div class="i18n collapse-title font-medium" data-i18n="advance">Advance settings</div>
+        <div class="collapse-content">
+          <div class="i18n" data-i18n="halo-cross">Halo & Cross adjust</div>
+          <div class="flex justify-evenly my-4">
+            <span class="flex-1"><span class="mr-2">X</span><input type="number" placeholder="Type here" value="-18"
+                class="input input-bordered input-sm input-primary w-32 mr-2" id="graphX" /></span>
+            <span class="flex-1"><span class="mr-2">Y</span><input type="number" placeholder="Type here" value="0"
+                class="input input-bordered input-sm input-primary w-32" id="graphY" /></span>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="flex justify-evenly my-4">
       <span><button class="i18n btn btn-primary" id="save" data-i18n="save">Save</button></span>
       <span><button class="i18n btn btn-primary" id="copy" data-i18n="copy">Copy</button></span>
     </div>
-  </div>
+    <label class="swap">
+      <input type="checkbox" disabled id="message-switch" />
+      <div class="alert alert-success swap-on">
+        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span class="i18n font-medium" data-i18n="copy-success">Image copied</span>
+      </div>
+    </label>
+  </section>
+  <footer>
+    <section class="w-full mx-auto my-8 sm:w-96 px-4">
+      <h2 class="i18n text-2xl font-bold leading-loose" data-i18n="font-title">Used Fonts</h2>
+      <ul class="list-disc leading-relaxed text-lg font-normal mb-8 px-6">
+        <li>
+          <span class="i18n" data-i18n="main-font">Main font: </span>
+          <a href="https://www.morisawa.co.jp/fonts/specimen/1646" target="_blank">RoG2サンセリフStd B</a>
+        </li>
+        <li>
+          <span class="i18n" data-i18n="fallback-font">Fallback font: </span>
+          <a href="https://github.com/welai/glow-sans" target="_blank" class="i18n" data-i18n="glow">Wêlai Glow Sans</a>
+        </li>
+      </ul>
+      <h2 class="i18n text-2xl font-bold leading-loose" data-i18n="github-repo">GitHub repo</h2>
+      <a href="https://github.com/nulla2011/Bluearchive-logo" target="_blank"
+        class="text-md">https://github.com/nulla2011/Bluearchive-logo</a>
+    </section>
+  </footer>
   <script type="module" src="/src/main.ts"></script>
 </body>
 
