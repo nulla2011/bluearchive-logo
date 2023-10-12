@@ -1,8 +1,16 @@
 import debounce from 'lodash-es/debounce';
 import settings from './settings';
 import loadFont from './utils/loadFont';
-const { canvasHeight, canvasWidth, fontSize, horizontalTilt, textBaseLine, graphOffset, paddingX } =
-  settings;
+const {
+  canvasHeight,
+  canvasWidth,
+  fontSize,
+  horizontalTilt,
+  textBaseLine,
+  graphOffset,
+  paddingX,
+  hollowPath,
+} = settings;
 const font = `${fontSize}px RoGSanSrfStd-Bd, GlowSansSC-Normal-Heavy_diff, apple-system, BlinkMacSystemFont, Segoe UI, Helvetica, Arial, PingFang SC, Hiragino Sans GB, Microsoft YaHei, sans-serif`;
 
 export default class LogoCanvas {
@@ -67,7 +75,7 @@ export default class LogoCanvas {
     c.resetTransform(); //restore don't work
     c.drawImage(
       window.halo,
-      this.canvasWidthL - canvasHeight / 2 + this.graphOffset.X,
+      this.canvasWidthL - this.canvas.height / 2 + this.graphOffset.X,
       this.graphOffset.Y,
       canvasHeight,
       canvasHeight
@@ -75,18 +83,34 @@ export default class LogoCanvas {
     c.fillStyle = '#2B2B2B';
     c.textAlign = 'start';
     if (this.transparentBg) {
-      c.strokeStyle = '#0000';
-    } else {
-      c.strokeStyle = 'white';
+      c.globalCompositeOperation = 'destination-out';
     }
+    c.strokeStyle = 'white';
     c.lineWidth = 12;
     c.setTransform(1, 0, horizontalTilt, 1, 0, 0);
     c.strokeText(this.textR, this.canvasWidthL, this.canvas.height * textBaseLine);
+    c.globalCompositeOperation = 'source-over';
     c.fillText(this.textR, this.canvasWidthL, this.canvas.height * textBaseLine);
     c.resetTransform();
+    const graph = {
+      X: this.canvasWidthL - this.canvas.height / 2 + graphOffset.X,
+      Y: this.graphOffset.Y,
+    };
+    c.beginPath();
+    c.moveTo(graph.X + hollowPath[0][0] / 2, graph.Y + hollowPath[0][1] / 2);
+    c.lineTo(graph.X + hollowPath[1][0] / 2, graph.Y + hollowPath[1][1] / 2);
+    c.lineTo(graph.X + hollowPath[2][0] / 2, graph.Y + hollowPath[2][1] / 2);
+    c.lineTo(graph.X + hollowPath[3][0] / 2, graph.Y + hollowPath[3][1] / 2);
+    c.closePath();
+    if (this.transparentBg) {
+      c.globalCompositeOperation = 'destination-out';
+    }
+    c.fillStyle = 'white';
+    c.fill();
+    c.globalCompositeOperation = 'source-over';
     c.drawImage(
       window.cross,
-      this.canvasWidthL - canvasHeight / 2 + graphOffset.X,
+      this.canvasWidthL - this.canvas.height / 2 + graphOffset.X,
       this.graphOffset.Y,
       canvasHeight,
       canvasHeight
