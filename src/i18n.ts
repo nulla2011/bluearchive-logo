@@ -1,9 +1,9 @@
-import i18next from 'i18next';
+import { init, t } from 'i18next';
 import en from './locales/en.json';
 import zh from './locales/zh.json';
 
-const lang = ['zh', 'zh-CN', 'zh-TW'].includes(navigator.language) ? 'zh' : 'en';
-i18next.init({
+const lang = ['zh', 'zh-CN', 'zh-cn'].includes(navigator.language) ? 'zh' : 'en';
+init({
   lng: lang,
   resources: {
     en: {
@@ -17,5 +17,5 @@ i18next.init({
 
 document.querySelectorAll('.i18n').forEach((el) => {
   const key = el.getAttribute('data-i18n')!;
-  el.textContent = i18next.t(key);
+  el.textContent = t(key);
 });

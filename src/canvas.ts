@@ -31,6 +31,7 @@ export default class LogoCanvas {
     this.ctx = this.canvas.getContext('2d')!;
     this.canvas.height = canvasHeight;
     this.canvas.width = canvasWidth;
+    this.bindEvent();
   }
   async draw() {
     const loading = document.querySelector('#loading')!;
@@ -55,15 +56,15 @@ export default class LogoCanvas {
       c.strokeStyle = '#00cccc';
       c.lineWidth = 1;
       c.beginPath();
-      c.moveTo(this.canvas.width / 2, 0);
-      c.lineTo(this.canvas.width / 2, this.canvas.height);
+      c.moveTo(this.canvasWidthL, 0);
+      c.lineTo(this.canvasWidthL, this.canvas.height);
       c.stroke();
       console.log(this.textMetricsL.width, this.textMetricsR.width);
       console.log(this.textWidthL, this.textWidthR);
-      c.moveTo(this.canvas.width / 2 - this.textWidthL, 0);
-      c.lineTo(this.canvas.width / 2 - this.textWidthL, this.canvas.height);
-      c.moveTo(this.canvas.width / 2 + this.textWidthR, 0);
-      c.lineTo(this.canvas.width / 2 + this.textWidthR, this.canvas.height);
+      c.moveTo(this.canvasWidthL - this.textWidthL, 0);
+      c.lineTo(this.canvasWidthL - this.textWidthL, this.canvas.height);
+      c.moveTo(this.canvasWidthL + this.textWidthR, 0);
+      c.lineTo(this.canvasWidthL + this.textWidthR, this.canvas.height);
       c.stroke();
     }
     //blue text -> halo -> black text -> cross
@@ -178,15 +179,15 @@ export default class LogoCanvas {
     this.canvas.width = this.canvasWidthL + this.canvasWidthR;
   }
   generateImg() {
+    let outputCanvas: HTMLCanvasElement;
     if (
       this.textWidthL + paddingX < canvasWidth / 2 ||
       this.textWidthR + paddingX < canvasWidth / 2
     ) {
-      const imgCanvas = new OffscreenCanvas(
-        this.textWidthL + this.textWidthR + paddingX * 2,
-        this.canvas.height
-      );
-      const ctx = imgCanvas.getContext('2d')!;
+      outputCanvas = document.createElement('canvas');
+      outputCanvas.width = this.textWidthL + this.textWidthR + paddingX * 2;
+      outputCanvas.height = this.canvas.height;
+      const ctx = outputCanvas.getContext('2d')!;
       ctx.drawImage(
         this.canvas,
         canvasWidth / 2 - this.textWidthL - paddingX,
@@ -198,25 +199,25 @@ export default class LogoCanvas {
         this.textWidthL + this.textWidthR + paddingX * 2,
         this.canvas.height
       );
-      return imgCanvas.convertToBlob();
     } else {
-      return new Promise<Blob>((resolve, reject) => {
-        this.canvas.toBlob((blob) => {
-          if (blob) {
-            resolve(blob);
-          } else {
-            reject();
-          }
-        });
-      });
+      outputCanvas = this.canvas;
     }
+    return new Promise<Blob>((resolve, reject) => {
+      outputCanvas.toBlob((blob) => {
+        if (blob) {
+          resolve(blob);
+        } else {
+          reject();
+        }
+      });
+    });
   }
   saveImg() {
     this.generateImg().then((blob) => {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `ba-style-logo@nulla.top_${Math.round(new Date().getTime() / 1000)}.png`;
+      a.download = `${this.textL}${this.textR}_ba-style@nulla.top.png`;
       a.click();
       URL.revokeObjectURL(url);
     });
