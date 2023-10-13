@@ -98,10 +98,16 @@ export default class LogoCanvas {
       Y: this.graphOffset.Y,
     };
     c.beginPath();
-    c.moveTo(graph.X + hollowPath[0][0] / 2, graph.Y + hollowPath[0][1] / 2);
-    c.lineTo(graph.X + hollowPath[1][0] / 2, graph.Y + hollowPath[1][1] / 2);
-    c.lineTo(graph.X + hollowPath[2][0] / 2, graph.Y + hollowPath[2][1] / 2);
-    c.lineTo(graph.X + hollowPath[3][0] / 2, graph.Y + hollowPath[3][1] / 2);
+    c.moveTo(
+      graph.X + (hollowPath[0][0] / 500) * canvasHeight,
+      graph.Y + (hollowPath[0][1] / 500) * canvasHeight
+    );
+    for (let i = 1; i < 4; i++) {
+      c.lineTo(
+        graph.X + (hollowPath[i][0] / 500) * canvasHeight,
+        graph.Y + (hollowPath[i][1] / 500) * canvasHeight
+      );
+    }
     c.closePath();
     if (this.transparentBg) {
       c.globalCompositeOperation = 'destination-out';
