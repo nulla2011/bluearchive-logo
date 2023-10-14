@@ -25,13 +25,28 @@ export default class LogoCanvas {
   private textWidthL = 0;
   private textWidthR = 0;
   private graphOffset = graphOffset;
+  private accentColor = '#128AFA';
   private transparentBg = false;
+  private swapColors = false;
+  private darkMode = false;
   constructor() {
     this.canvas = document.querySelector('#canvas')!;
     this.ctx = this.canvas.getContext('2d')!;
     this.canvas.height = canvasHeight;
     this.canvas.width = canvasWidth;
     this.bindEvent();
+  }
+  get backgroundColor() {
+    return this.darkMode ? '#2B2B2B' : '#fff';
+  }
+  get textColor() {
+    return this.darkMode ? '#fff' : '#2B2B2B';
+  }
+  get primaryColor() {
+    return this.swapColors ? this.textColor : this.accentColor;
+  }
+  get secondaryColor() {
+    return this.swapColors ? this.accentColor : this.textColor;
   }
   async draw() {
     const loading = document.querySelector('#loading')!;
@@ -48,7 +63,7 @@ export default class LogoCanvas {
     c.clearRect(0, 0, this.canvas.width, this.canvas.height);
     //Background
     if (!this.transparentBg) {
-      c.fillStyle = '#fff';
+      c.fillStyle = this.backgroundColor;
       c.fillRect(0, 0, this.canvas.width, this.canvas.height);
     }
     //guide line
@@ -69,24 +84,26 @@ export default class LogoCanvas {
     }
     //blue text -> halo -> black text -> cross
     c.font = font;
-    c.fillStyle = '#128AFA';
+    c.fillStyle = this.primaryColor;
     c.textAlign = 'end';
     c.setTransform(1, 0, horizontalTilt, 1, 0, 0);
     c.fillText(this.textL, this.canvasWidthL, this.canvas.height * textBaseLine);
     c.resetTransform(); //restore don't work
-    c.drawImage(
+    this.drawSVG(
+      c,
       window.halo,
       this.canvasWidthL - this.canvas.height / 2 + this.graphOffset.X,
       this.graphOffset.Y,
       canvasHeight,
-      canvasHeight
+      canvasHeight,
+      this.textColor,
     );
-    c.fillStyle = '#2B2B2B';
+    c.fillStyle = this.secondaryColor;
     c.textAlign = 'start';
     if (this.transparentBg) {
       c.globalCompositeOperation = 'destination-out';
     }
-    c.strokeStyle = 'white';
+    c.strokeStyle = this.backgroundColor;
     c.lineWidth = 12;
     c.setTransform(1, 0, horizontalTilt, 1, 0, 0);
     c.strokeText(this.textR, this.canvasWidthL, this.canvas.height * textBaseLine);
@@ -112,16 +129,29 @@ export default class LogoCanvas {
     if (this.transparentBg) {
       c.globalCompositeOperation = 'destination-out';
     }
-    c.fillStyle = 'white';
+    c.fillStyle = this.backgroundColor;
     c.fill();
     c.globalCompositeOperation = 'source-over';
-    c.drawImage(
+    this.drawSVG(
+      c,
       window.cross,
       this.canvasWidthL - this.canvas.height / 2 + graphOffset.X,
       this.graphOffset.Y,
       canvasHeight,
-      canvasHeight
+      canvasHeight,
+      this.accentColor,
     );
+  }
+  private drawSVG(c: CanvasRenderingContext2D, paths: string[], x: number, y: number, w: number, h: number, color: string) {
+    const path = new Path2D();
+    paths.forEach(pathString => {
+      const matrix = document.createElementNS('http://www.w3.org/2000/svg', 'svg').createSVGMatrix();
+      const transformedMatrix = matrix.scale(w / 500, h / 500);
+      path.addPath(new Path2D(pathString), transformedMatrix);
+    });
+    c.fillStyle = color;
+    c.translate(x, y);
+    c.fill(path);
   }
   bindEvent() {
     const process = (id: 'textL' | 'textR', el: HTMLInputElement) => {
@@ -151,6 +181,21 @@ export default class LogoCanvas {
     const tSwitch = document.querySelector('#transparent')! as HTMLInputElement;
     tSwitch.addEventListener('change', () => {
       this.transparentBg = tSwitch.checked;
+      this.draw();
+    });
+    const scSwitch = document.querySelector('#swap-colors')! as HTMLInputElement;
+    scSwitch.addEventListener('change', () => {
+      this.swapColors = scSwitch.checked;
+      this.draw();
+    });
+    const dSwitch = document.querySelector('#dark-mode')! as HTMLInputElement;
+    dSwitch.addEventListener('change', () => {
+      this.darkMode = dSwitch.checked;
+      this.draw();
+    });
+    const accentColorInput = document.querySelector('#accent-color')! as HTMLInputElement;
+    accentColorInput.addEventListener('input', () => {
+      this.accentColor = accentColorInput.value;
       this.draw();
     });
     const gx = document.querySelector('#graphX')! as HTMLInputElement;

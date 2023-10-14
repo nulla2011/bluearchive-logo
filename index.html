@@ -36,6 +36,16 @@
         <span class="i18n label-text text-base ml-4 mr-16" data-i18n="transparent-background">Transparent
           Background</span>
       </label>
+
+      <label class="cursor-pointer label justify-start mx-10">
+        <input type="checkbox" class="toggle toggle-primary" id="swap-colors" />
+        <span class="i18n label-text text-base ml-4 mr-16" data-i18n="swap-colors">Swap Colors</span>
+      </label>
+
+      <label class="cursor-pointer label justify-start mx-10">
+        <input type="checkbox" class="toggle toggle-primary" id="dark-mode" />
+        <span class="i18n label-text text-base ml-4 mr-16" data-i18n="dark-mode">Dark Mode</span>
+      </label>
     </div>
     <div class="mx-6 my-4">
       <div class="collapse collapse-arrow bg-base-100">
@@ -48,6 +58,12 @@
                 class="input input-bordered input-sm input-primary w-32 mr-2" id="graphX" /></span>
             <span class="flex-1"><span class="mr-2">Y</span><input type="number" placeholder="Type here" value="0"
                 class="input input-bordered input-sm input-primary w-32" id="graphY" /></span>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <div class="i18n" data-i18n="accent-color">Accent color</div>
+            <input type="color" value="#128AFA" class="input input-bordered input-sm input-primary w-32"
+              id="accent-color" />
           </div>
         </div>
       </div>
