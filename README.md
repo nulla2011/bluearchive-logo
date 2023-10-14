@@ -1,6 +1,6 @@
-# BlueArchive-style Logo Generater
+# BlueArchive-style Logo Generator
 
-A logo generater using canvas & Vanilla js.
+A logo generator using canvas & Vanilla js.
 
 ## Used Fonts
 
