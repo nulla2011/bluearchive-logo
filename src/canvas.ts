@@ -172,50 +172,29 @@ export default class LogoCanvas {
       this.textMetricsR!.width +
       (textBaseLine * canvasHeight - this.textMetricsR!.fontBoundingBoxAscent) * horizontalTilt;
     //extend canvas
-    if (this.textWidthL + paddingX > canvasWidth / 2) {
-      this.canvasWidthL = this.textWidthL + paddingX;
-    } else {
-      this.canvasWidthL = canvasWidth / 2;
-    }
-    if (this.textWidthR + paddingX > canvasWidth / 2) {
-      this.canvasWidthR = this.textWidthR + paddingX;
-    } else {
-      this.canvasWidthR = canvasWidth / 2;
-    }
+    this.canvasWidthL = Math.max(this.textWidthL + paddingX, canvasWidth / 2);
+    this.canvasWidthR = Math.max(this.textWidthR + paddingX, canvasWidth / 2);
     this.canvas.width = this.canvasWidthL + this.canvasWidthR;
   }
   generateImg() {
     let outputCanvas: HTMLCanvasElement;
-    if (
-      this.textWidthL + paddingX < canvasWidth / 2 ||
-      this.textWidthR + paddingX < canvasWidth / 2
-    ) {
-      outputCanvas = document.createElement('canvas');
-      outputCanvas.width = this.textWidthL + this.textWidthR + paddingX * 2;
-      outputCanvas.height = this.canvas.height;
-      const ctx = outputCanvas.getContext('2d')!;
-      ctx.drawImage(
-        this.canvas,
-        canvasWidth / 2 - this.textWidthL - paddingX,
-        0,
-        this.textWidthL + this.textWidthR + paddingX * 2,
-        this.canvas.height,
-        0,
-        0,
-        this.textWidthL + this.textWidthR + paddingX * 2,
-        this.canvas.height
-      );
-    } else {
-      outputCanvas = this.canvas;
-    }
+    outputCanvas = document.createElement('canvas');
+    outputCanvas.width = this.textWidthL + this.textWidthR + paddingX * 2;
+    outputCanvas.height = this.canvas.height;
+    const ctx = outputCanvas.getContext('2d')!;
+    ctx.drawImage(
+      this.canvas,
+      this.canvasWidthL - this.textWidthL - paddingX,
+      0,
+      outputCanvas.width,
+      outputCanvas.height,
+      0,
+      0,
+      outputCanvas.width,
+      outputCanvas.height,
+    );
     return new Promise<Blob>((resolve, reject) => {
-      outputCanvas.toBlob((blob) => {
-        if (blob) {
-          resolve(blob);
-        } else {
-          reject();
-        }
-      });
+      outputCanvas.toBlob((blob) => blob ? resolve(blob) : reject());
     });
   }
   saveImg() {
